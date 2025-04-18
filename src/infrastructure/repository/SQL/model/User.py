@@ -5,11 +5,14 @@ from dataclasses import dataclass
 
 @dataclass
 class User(Base):
-    __tablename__ = 'user'
-    id = Column(String(50), primary_key=True)
+    __tablename__ = "user"
+    username = Column(String(60), primary_key=True)
+    email = Column(String(100), unique=True, nullable=False)
     phone = Column(String(10), unique=True, nullable=False)
-    name = Column(String(100), unique=False, nullable=False)
-    last_name = Column(String(100), unique=False, nullable=False)
+    full_name = Column(String(100), unique=False, nullable=False)
+    source = Column(String(100), unique=False, nullable=False)
+    active = Column(String(100), unique=False, nullable=False)
+    keep_login = Column(String(100), unique=False, nullable=False)
 
     def serialize(self):
         return {col.name: getattr(self, col.name) for col in self.__table__.columns}
