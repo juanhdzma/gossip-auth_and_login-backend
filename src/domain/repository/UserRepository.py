@@ -6,7 +6,22 @@ from typing import List
 
 class UserRepository:
     @abstractmethod
-    def crearUsuario(self, data: IUser) -> bool:
+    def createUser(self, data: IUser) -> bool:
+        pass
+
+    @abstractmethod
+    def checkExistingUserByUsername(self, username) -> bool:
+        pass
+
+    @abstractmethod
+    def checkExistingUserByEmail(self, email) -> bool:
+        pass
+
+    @abstractmethod
+    def checkExistingUserByPhone(self, phone) -> bool:
+        pass
+
+    def getUserByUsername(self, username) -> User | None:
         pass
 
     @abstractmethod

@@ -42,3 +42,7 @@ class InvalidMethodException(CustomException):
 class TeapotException(CustomException):
     def __init__(self, message: str):
         super().__init__(message, StatusCode.TEAPOT)
+
+class Unauthorized(CustomException):
+    def __init__(self, message: str):
+        super().__init__(message, StatusCode.UNAUTHORIZED)

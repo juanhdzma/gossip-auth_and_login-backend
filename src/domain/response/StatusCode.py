@@ -12,6 +12,7 @@ class StatusCode(Enum):
     INVALID_METHOD = 405
     CONFLICT = 409
     TEAPOT = 418
+    UNAUTHORIZED = 401
 
     # 500
     INTERNAL_SERVER_ERROR = 500

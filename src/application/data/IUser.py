@@ -2,27 +2,24 @@ from pydantic import BaseModel, field_validator
 
 
 class IUser(BaseModel):
-    id: str
+    username: str
+    email: str
     phone: str
-    name: str
-    last_name: str
-
-    @field_validator("id")
-    def validateId(cls, value):
-        if value.isdigit():
-            return value
-        raise ValueError("La cedula no es valida")
+    full_name: str
+    source: str
+    active: bool = True
+    keep_login: bool = True
 
     @field_validator("phone")
     def validatePhone(cls, value):
         if value.isdigit() and len(value) == 10:
             return value
-        raise ValueError("El telefono no es valido")
+        raise ValueError("Phone number is not valid")
 
-    @field_validator("name", "last_name")
+    @field_validator("full_name")
     def validateName(cls, value):
         parts = value.split()
         for part in parts:
             if not part.isalpha():
-                raise ValueError("El nombre o apellido no son validos")
+                raise ValueError("The full name is not valid")
         return value
