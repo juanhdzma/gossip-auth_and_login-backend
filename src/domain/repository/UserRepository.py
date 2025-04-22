@@ -2,7 +2,7 @@ from abc import abstractmethod
 from src.application.data.IUser import IUser
 from src.infrastructure.repository.SQL.model.User import User
 from typing import List
-
+from uuid import UUID
 
 class UserRepository:
     @abstractmethod
@@ -21,7 +21,12 @@ class UserRepository:
     def checkExistingUserByPhone(self, phone) -> bool:
         pass
 
+    @abstractmethod
     def getUserByUsername(self, username) -> User | None:
+        pass
+
+    @abstractmethod
+    def getUserById(self, id: UUID) -> User | None:
         pass
 
     @abstractmethod

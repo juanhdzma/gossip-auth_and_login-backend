@@ -1,7 +1,7 @@
 from src.application.data.IUser import IUser
 from src.infrastructure.repository.SQL.model.User import User
 from src.domain.repository.UserRepository import UserRepository
-
+from uuid import UUID
 
 class UserDAO(UserRepository):
     def __init__(self, database):
@@ -28,6 +28,7 @@ class UserDAO(UserRepository):
                 return True
             return False
         except BaseException as e:
+            print("error: ", e)
             raise Exception(f"A error happend in checkExistingUserByUsername"); 
         finally:
             self.database.closeConnection(session)
@@ -63,6 +64,16 @@ class UserDAO(UserRepository):
             return user
         except BaseException:
             raise Exception(f"A error happend in getUserByUsername"); 
+        finally:
+            self.database.closeConnection(session)
+
+    def getUserById(self, id: UUID) -> User | None:
+        try:
+            session = self.database.createConnection()
+            user = session.query(User).filter(User.id == id).first()
+            return user
+        except BaseException:
+            raise Exception(f"A error happend in getUserById"); 
         finally:
             self.database.closeConnection(session)
 

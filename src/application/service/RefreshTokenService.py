@@ -1,6 +1,7 @@
 from datetime import datetime,timedelta, timezone
 import hashlib
 import uuid
+from uuid import UUID
 from injector import Injector
 from src.domain.response.Result import EntityCreated
 from src.domain.repository.UserRepository import UserRepository
@@ -26,12 +27,12 @@ class RefreshTokenService:
     def hash_token(self, token: str) -> str | bool :
         return hashlib.sha256(token.encode()).hexdigest()
 
-    def createRefreshToken(self, user_name: str):
+    def createRefreshToken(self, user_id: UUID):
         raw_token = str(uuid.uuid4())
         token_hash = self.hash_token(raw_token)
         expire = datetime.now(timezone.utc) + timedelta(minutes=REFRESH_TOKEN_EXPIRE_MINUTES)
 
-        new_refresh_token = IRefreshToken(token_hash = token_hash, user_name=user_name, expires_at = expire)
+        new_refresh_token = IRefreshToken(token_hash = token_hash, user_id=user_id, expires_at = expire)
 
         result = self.refresh_token_repository.createRefreshToken(new_refresh_token)
         if result:
@@ -47,7 +48,8 @@ class RefreshTokenService:
         if tokenDb.expires_at.replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
             return Response.failure(Unauthorized("Expired refresh token"))
 
-        currentUser =self.user_repository.getUserByUsername(tokenDb.user_name)
+        print("result",tokenDb.user_id)
+        currentUser =self.user_repository.getUserById(tokenDb.user_id)
         if currentUser == None:
             return Response.failure(NotFoundException("user not found"))
 
@@ -55,11 +57,10 @@ class RefreshTokenService:
         if revokeToken == False:
             return Response.failure(NotFoundException("it was not possible to revoke the token"))
 
-        newRefreshToken = self.createRefreshToken(currentUser.username)
+        newRefreshToken = self.createRefreshToken(currentUser.id)
         if newRefreshToken == False:
             return Response.failure(ConflictException("it was not possible to generate the refresh token"))
         
-        currentUser =self.user_repository.getUserByUsername(tokenDb.user_name)
         newAccessToken =  AccessTokenHelper.create_access_token(email=currentUser.email, username=currentUser.username)
         
         return Response.ok(EntityCreated({

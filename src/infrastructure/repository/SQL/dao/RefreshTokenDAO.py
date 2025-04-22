@@ -15,6 +15,7 @@ class RefreshTokenDAO(RefreshTokenRepository):
             session.commit()
             return True
         except BaseException as e:
+            print(e)
             raise Exception(f"A error happend in create refresh token"); 
         finally:
             self.database.closeConnection(session)

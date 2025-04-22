@@ -51,7 +51,7 @@ class UserService:
         createdUser = self.user_repository.createUser(userToSave)
 
         if createdUser:
-            refreshToken=self.refresh_token_service.createRefreshToken(userToSave.username)
+            refreshToken=self.refresh_token_service.createRefreshToken(self.user_repository.getUserByUsername(userToSave.username).id)
             if refreshToken == False:
                 return Response.failure(ConflictException("it was not possible to generate the refresh token"))
             
