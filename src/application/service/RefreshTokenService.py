@@ -3,7 +3,7 @@ import hashlib
 import uuid
 from uuid import UUID
 from injector import Injector
-from src.domain.response.Result import EntityCreated
+from src.domain.response.Result import CorrectResult, EntityCreated
 from src.domain.repository.UserRepository import UserRepository
 from src.domain.response.Response import Response
 from src.application.data.IRefreshToken import IRefreshToken
@@ -48,10 +48,9 @@ class RefreshTokenService:
         if tokenDb.expires_at.replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
             return Response.failure(Unauthorized("Expired refresh token"))
 
-        print("result",tokenDb.user_id)
         currentUser =self.user_repository.getUserById(tokenDb.user_id)
         if currentUser == None:
-            return Response.failure(NotFoundException("user not found"))
+            return Response.failure(NotFoundException("user not found with refresh token"))
 
         revokeToken=self.refresh_token_repository.revokeToken(tokenHash)
         if revokeToken == False:
@@ -67,9 +66,28 @@ class RefreshTokenService:
                 "Refresh_token": newRefreshToken,
                 "Access_token": newAccessToken
         }))
+    
+    def logout(self, refresh_token: str, user: dict):
+        tokenHash = self.hash_token(refresh_token)
+        tokenDb = self.refresh_token_repository.getRefreshTokenByTokenHash(tokenHash)
+        if not tokenDb or tokenDb.revoked:
+            return Response.failure(Unauthorized("Invalid refresh token"))
+        if tokenDb.expires_at.replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
+            return Response.failure(Unauthorized("Expired refresh token"))
+        
+        refreshTokenUser =self.user_repository.getUserById(tokenDb.user_id)
+        if refreshTokenUser == None:
+            return Response.failure(NotFoundException("user not found with refresh token"))
+        
+        if refreshTokenUser.username != user["username"]:
+            return Response.failure(Unauthorized("The access token and refresh token do not match"))
+        
+        revokeToken=self.refresh_token_repository.revokeToken(tokenHash)
+        if revokeToken == False:
+            return Response.failure(NotFoundException("it was not possible to revoke the token"))
 
-
-
+        return Response.ok(CorrectResult({"message": "Logout successful"}))
+    
 
 
 
