@@ -8,8 +8,8 @@ T = TypeVar('T')
 class Response:
     @staticmethod
     def ok(data: T) -> JSONResponse:
-        return JSONResponse(content=data.serialize(), status_code=data.status_code.value)
+        return JSONResponse(content=data.serialize(), status_code=data.statusCode.value)
 
     @staticmethod
     def failure(exception: CustomException) -> JSONResponse:
-        return JSONResponse(content=exception.serialize(), status_code=exception.status_code.value)
+        return JSONResponse(content=exception.serialize(), status_code=exception.statusCode.value)

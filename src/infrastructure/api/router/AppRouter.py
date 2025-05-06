@@ -6,37 +6,37 @@ from src.application.data.IUser import IUser
 from src.application.service.UserService import UserService
 from src.application.utils.TokenHelper import AccessTokenHelper
 
-app_router = APIRouter()
+appRouter = APIRouter()
 userService = UserService()
 refreshTokenService = RefreshTokenService()
 
-@app_router.post("/login")
+@appRouter.post("/login")
 def login(payload: IUser):
     return userService.createUser(payload)
 
-@app_router.post("/create")
+@appRouter.post("/create")
 def createUser(payload: CreateUserDto):
     return userService.createUser(payload)
 
-@app_router.post("/refresh")
+@appRouter.post("/refresh")
 def rotateRefreshToken(payload: RotateRefreshTokenDto):
-    return refreshTokenService.rotate_refresh_token(payload.refreshToken)
+    return refreshTokenService.rotateRefreshToken(payload.refreshToken)
 
-@app_router.post("/logout")
-def logout(payload: RotateRefreshTokenDto, user: dict = Depends(AccessTokenHelper.verify_access_token)):
+@appRouter.post("/logout")
+def logout(payload: RotateRefreshTokenDto, user: dict = Depends(AccessTokenHelper.verifyAccessToken)):
     return refreshTokenService.logout(payload.refreshToken, user)
 
-@app_router.delete("/user")
+@appRouter.delete("/user")
 def createUser(payload: IUser):
     return userService.createUser(payload)
 
 
-@app_router.patch("/user")
+@appRouter.patch("/user")
 def createUser(payload: IUser):
     return userService.createUser(payload)
 
 
-@app_router.patch("/keep_login")
+@appRouter.patch("/keep_login")
 def createUser(payload: IUser):
     return userService.createUser(payload)
 

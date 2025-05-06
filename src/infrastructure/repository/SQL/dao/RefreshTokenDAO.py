@@ -10,8 +10,8 @@ class RefreshTokenDAO(RefreshTokenRepository):
     def createRefreshToken(self, IRefreshToken : IRefreshToken) -> bool:
         try:
             session = self.database.createConnection()
-            new_refresh_token = RefreshToken(**IRefreshToken.model_dump())
-            session.add(new_refresh_token)
+            newRefreshToken = RefreshToken(**IRefreshToken.model_dump())
+            session.add(newRefreshToken)
             session.commit()
             return True
         except BaseException as e:
