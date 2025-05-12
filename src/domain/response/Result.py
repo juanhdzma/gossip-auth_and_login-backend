@@ -8,9 +8,9 @@ T = TypeVar('T')
 
 class Result:
     def __init__(self, data: T, statusCode: StatusCode):
-        self.is_error = False
+        self.isError = False
         self.data = data
-        self.status_code = statusCode
+        self.statusCode = statusCode
         self.timestamp = datetime.now()
 
     def serialize(self):

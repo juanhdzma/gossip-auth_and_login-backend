@@ -1,4 +1,5 @@
-from sqlalchemy import Column, String
+import uuid
+from sqlalchemy import UUID, Column, String
 from src.infrastructure.repository.SQL.model.ModelsCreator import Base
 from dataclasses import dataclass
 
@@ -6,8 +7,10 @@ from dataclasses import dataclass
 @dataclass
 class User(Base):
     __tablename__ = "user"
-    username = Column(String(60), primary_key=True)
+    id = Column(UUID(), primary_key=True, default=uuid.uuid4)
+    username = Column(String(60), unique=True)
     email = Column(String(100), unique=True, nullable=False)
+    password = Column(String(100), unique=False)
     phone = Column(String(10), unique=True, nullable=False)
     full_name = Column(String(100), unique=False, nullable=False)
     source = Column(String(100), unique=False, nullable=False)

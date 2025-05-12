@@ -1,4 +1,6 @@
 from injector import inject, Module, singleton
+from src.domain.repository.RefreshTokenRepository import RefreshTokenRepository
+from src.infrastructure.repository.SQL.dao.RefreshTokenDAO import RefreshTokenDAO
 from src.infrastructure.repository.SQL.adapter.SQLiteDatabase import SQLiteDatabase
 from src.infrastructure.Envs import ENV
 from src.infrastructure.repository.SQL.adapter.CloudDatabase import CloudDatabase
@@ -17,3 +19,4 @@ class DependencyContainer(Module):
     @inject
     def configure(self, binder):
         binder.bind(UserRepository, to=UserDAO(database))
+        binder.bind(RefreshTokenRepository, to=RefreshTokenDAO(database))

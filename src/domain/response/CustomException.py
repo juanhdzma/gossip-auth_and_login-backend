@@ -5,9 +5,9 @@ from src.domain.response.StatusCode import StatusCode
 
 class CustomException(Exception):
     def __init__(self, message: str, statusCode: StatusCode):
-        self.is_error = True
+        self.isError = True
         self.message = message
-        self.status_code = statusCode
+        self.statusCode = statusCode
         self.timestamp = datetime.now()
 
     def serialize(self):
@@ -42,3 +42,7 @@ class InvalidMethodException(CustomException):
 class TeapotException(CustomException):
     def __init__(self, message: str):
         super().__init__(message, StatusCode.TEAPOT)
+
+class Unauthorized(CustomException):
+    def __init__(self, message: str):
+        super().__init__(message, StatusCode.UNAUTHORIZED)

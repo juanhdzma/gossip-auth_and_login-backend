@@ -9,7 +9,7 @@ from src.domain.response.CustomException import (
     BadRequestException,
 )
 from src.domain.response.Response import Response
-from src.infrastructure.api.router.AppRouter import app_router
+from src.infrastructure.api.router.AppRouter import appRouter
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -22,7 +22,7 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
-app.include_router(app_router, prefix="/gossip_api/v1")
+app.include_router(appRouter, prefix="/gossip_api/v1")
 
 
 # with open("docs/swagger/api.yaml", "r") as file:
